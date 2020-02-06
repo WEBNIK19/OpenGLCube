@@ -29,9 +29,9 @@ public:
 	Camera& getCamera();
 	const Camera& getCamera() const;
 private:
-	double FOV;
-	double zNear;
-	double zFar;
+	float FOV;
+	float zNear;
+	float zFar;
 	bool PP;
 	uint32_t width;
 	uint32_t height;

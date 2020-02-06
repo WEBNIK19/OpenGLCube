@@ -27,8 +27,8 @@ public:
 	void rotate(glm::vec3 point, glm::vec3 axis, double angle);
 	void setEyeTargetUp(glm::vec3 newEye, glm::vec3 newTarget, glm::vec3 newUp);
 private:
-	glm::vec3 eye{ 0, 0, 1 };
-	glm::vec3 target;
+	glm::vec3 eye{ 0, 0, 5 };
+	glm::vec3 target{0, 0, 0};
 	glm::vec3 up{ 0, 1, 0 };
 };
 

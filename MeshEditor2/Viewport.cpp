@@ -37,29 +37,36 @@ double Viewport::calcAspectRatio() const
 
 glm::mat4 Viewport::calcProjectionMatrix() const
 {
-	return glm::mat4();
+	if (PP)
+		return glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, zNear, zFar);
+	else 
+		return glm::perspective(glm::radians(FOV), (float)width / (float)height, (float)zNear, (float)zFar);
 }
 
 void Viewport::setViewportSize(uint32_t inWidth, uint32_t inHeight)
 {
+	this->width = inWidth;
+	this->height = inHeight;
 }
 
 void Viewport::setFOV(double inFOV)
 {
+	this->FOV = (float)inFOV;
 }
 
 void Viewport::setZNear(double inZNear)
 {
-	this->zNear = inZNear;
+	this->zNear = (float)inZNear;
 }
 
 void Viewport::setZFar(double inZFar)
 {
-	this->zFar = inZFar;
+	this->zFar = (float)inZFar;
 }
 
 void Viewport::setParallelProjection(bool use)
 {
+	this->PP = use;
 }
 
 double Viewport::getZNear() const

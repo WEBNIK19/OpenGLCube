@@ -50,6 +50,7 @@ void renderScene(GLRenderSystem& rs)
 {	
 	rs.renderTriangleSoup(vertices);	
 }
+
 void moveCube(GLRenderSystem& rs ,glm::vec3 offset)
 {
 	static glm::vec3 pos = glm::vec3(0.0);
@@ -60,6 +61,7 @@ void moveCube(GLRenderSystem& rs ,glm::vec3 offset)
 	rs.setWorldMatrix(worldMatrix);
 
 }
+
 glm::vec3 getFigCenter(const std::vector<Vertex>& vertices) {
 	glm::vec3 figCntr = glm::vec3(0.0);
 
@@ -69,6 +71,7 @@ glm::vec3 getFigCenter(const std::vector<Vertex>& vertices) {
 
 	return figCntr;
 }
+
 void rotateCube(float deg, glm::vec3 pivot)
 {
 	std::vector<Vertex> vertices2;
@@ -88,8 +91,6 @@ void rotateCube(float deg, glm::vec3 pivot)
 
 	rfrag = glm::rotate(rfrag, deg, pivot);
 	rnorm = glm::rotate(rnorm, deg, pivot);
-
-	
 
 	std::transform(vertices.begin(), vertices.end(), back_inserter(vertices2), [fromFigCntr, toFigCntr, rfrag, rnorm](Vertex v) -> Vertex {
 		Vertex v1 = { {0.0,0.0,0.0}, {0.0,0.0,0.0} };
@@ -145,15 +146,18 @@ int main(void)
 			moveCube(rs, glm::vec3(0.01, 0.0, 0.0));
 
 		if (key == KeyCode::W && action != Action::Release)
-			rotateCube(-0.1, glm::vec3(1.0, 0.0, 0.0));
+			moveCamera(viewport.getCamera(), glm::vec3(1.0, 0.0, 0.0));
 
 		if (key == KeyCode::S && action != Action::Release)
-			rotateCube(0.1, glm::vec3(0.0, 0.0, 1.0));
+			moveCamera(viewport.getCamera(), glm::vec3(0.0, 0.0, 1.0));
+
+		if (key == KeyCode::A && action != Action::Release)
+			moveCamera(viewport.getCamera(), glm::vec3(0.0, 1.0, 0.0));
 
 		if (key == KeyCode::D && action != Action::Release)
-			rotateCube(0.1, glm::vec3(0.0, 1.0, 0.0));
+			moveCamera(viewport.getCamera(), glm::vec3(0.0, 1.0, 0.0));
 
-		/*if (key == KeyCode::F1 && action != Action::Release)
+		if (key == KeyCode::F1 && action != Action::Release)
 			viewport.getCamera().setFrontView();
 
 		if (key == KeyCode::F2 && action != Action::Release)
@@ -178,11 +182,11 @@ int main(void)
 			if (viewport.isParallelProjection()) 
 				viewport.setParallelProjection(false);
 			else
-				viewport.setParallelProjection(true);*/
+				viewport.setParallelProjection(true);
 		});
 	
 	rs.init();
-	rs.setupLight(1, glm::vec3{ 0,0.5,1 }, glm::vec3{ 1,0,0 }, glm::vec3{ 0,1,0 }, glm::vec3{ 0,0,1 });
+	rs.setupLight(1, glm::vec3{ 0,0.5,0.5 }, glm::vec3{ 1,0,0 }, glm::vec3{ 0,1,0 }, glm::vec3{ 0,0,1 });
 	rs.turnLight(1, true);
 	
 	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -196,10 +200,13 @@ int main(void)
 	{
 		rs.setViewport(0, 0, window.getWidth(), window.getHeight());
 		rs.clearDisplay(0.5f, 0.5f, 0.5f);
-		
+
+		rs.setViewMatrix(viewport.getCamera().calcViewMatrix());
+		rs.setProjMatrix(viewport.calcProjectionMatrix());
 		renderScene(rs);
 		glfwSwapBuffers(window.getGLFWHandle());
 		glfwWaitEvents();
+
 	}
 	rs.~GLRenderSystem();
 	window.~GLWindow();
